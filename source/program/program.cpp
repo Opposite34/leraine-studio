@@ -403,7 +403,7 @@ void Program::SetUpMetadata()
 
 			ImGui::SameLine();
 			
-			if(ImGui::Button("Close"))
+			if(ImGui::Button("Close") || MOD(InputModule).WasKeyPressed(sf::Keyboard::Key::Escape))
 			{
 				if (ShouldSetUpNewChart) ChartMetadataSetup = ChartMetadata();
 				else ChartMetadataSetup = MOD(ChartParserModule).GetChartMetadata(SelectedChart);

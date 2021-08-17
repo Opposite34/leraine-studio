@@ -2,7 +2,7 @@
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
     "cmake.configureEnvironment": 
     {
-        "VCPKG_ROOT": "/home/x3tr0v/Development/vcpkg",
+        "VCPKG_ROOT": "C:/Users/bungp/Documents/vcpkg",
         "PROJECT_NAME": "leraine-studio"
     },
     "cmake.configureSettings": 
