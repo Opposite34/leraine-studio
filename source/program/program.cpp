@@ -470,19 +470,19 @@ void Program::InputActions()
 
 	if (MOD(InputModule).IsCtrlKeyDown())
 	{
-		if (MOD(InputModule).IsScrollingUp())
+		if (MOD(InputModule).IsScrollingUp() || MOD(InputModule).WasKeyPressed(sf::Keyboard::Key::Equal))
 			return ApplyDeltaToZoom(1.0f);
 
-		if (MOD(InputModule).IsScrollingDown())
+		if (MOD(InputModule).IsScrollingDown() || MOD(InputModule).WasKeyPressed(sf::Keyboard::Key::Hyphen))
 			return ApplyDeltaToZoom(-1.0f);
 	}
 
 	if (MOD(InputModule).IsAltKeyDown())
 	{
-		if (MOD(InputModule).IsScrollingUp())
+		if (MOD(InputModule).IsScrollingUp() || MOD(InputModule).IsRightKeyPressed())
 			return void(CurrentSnap = MOD(BeatModule).GetNextSnap(CurrentSnap)), PUSH_NOTIFICATION_LIFETIME(0.5f, "Snap %d", CurrentSnap);
 
-		if (MOD(InputModule).IsScrollingDown())
+		if (MOD(InputModule).IsScrollingDown() || MOD(InputModule).IsLeftKeyPressed())
 			return void(CurrentSnap = MOD(BeatModule).GetPreviousSnap(CurrentSnap)), PUSH_NOTIFICATION_LIFETIME(0.5f, "Snap %d", CurrentSnap);
 	}
 
