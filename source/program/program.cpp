@@ -177,7 +177,7 @@ void Program::MenuBar()
 
 			if (MOD(ShortcutMenuModule).MenuItem("Open", sf::Keyboard::Key::LControl, sf::Keyboard::Key::O))
 			{
-				MOD(DialogModule).OpenFileDialog(".osu;.sm", [this](const std::string &InPath) 
+				MOD(DialogModule).OpenFileDialog(".osu;.sm;.qua", [this](const std::string &InPath) 
 				{
 					OpenChart(InPath);
 				});

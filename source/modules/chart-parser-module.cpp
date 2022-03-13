@@ -1,5 +1,7 @@
 #include "chart-parser-module.h"
 
+#include "yaml-cpp/yaml.h"
+
 #include <sstream>
 #include <algorithm>
 
@@ -104,6 +106,8 @@ Chart* ChartParserModule::ParseAndGenerateChartSet(const std::filesystem::path& 
 		chart = ParseChartOsuImpl(chartFile, InPath);
 	else if(InPath.extension() == ".sm")
 		chart = ParseChartStepmaniaImpl(chartFile, InPath);
+	else if(InPath.extension() == ".qua")
+		chart = ParseChartQuaverImpl(InPath);
 
 	return chart;
 }
@@ -378,6 +382,78 @@ Chart* ChartParserModule::ParseChartStepmaniaImpl(std::ifstream& InIfstream, std
 	return nullptr;
 }
 
+Chart* ChartParserModule::ParseChartQuaverImpl(std::filesystem::path InPath)
+{
+	Chart* chart = new Chart();
+
+	std::filesystem::path path = InPath;
+	std::string parentPath = path.parent_path().string();
+
+	YAML::Node chartFile;
+
+	try 
+	{
+		chartFile = YAML::LoadFile(path.string());
+	}
+	catch (YAML::BadFile)
+	{
+		std::cerr << "Quaver Parsing: BadFile\n";
+		std::cerr << path << "\n";
+		return nullptr;
+	}
+
+	if (chartFile["AudioFile"]) 
+	{
+		std::filesystem::path resultedParentPath = parentPath;
+		std::filesystem::path songPath = resultedParentPath / chartFile["AudioFile"].as<std::string>();
+
+		chart->AudioPath = songPath;
+	}
+
+	if (chartFile["BackgroundFile"]) 
+	{
+		std::filesystem::path resultedParentPath = parentPath;
+		std::filesystem::path bgPath = resultedParentPath / chartFile["BackgroundFile"].as<std::string>();
+
+		chart->BackgroundPath = bgPath;
+	}
+
+	if (chartFile["Mode"]) {
+		/*
+		Quaver store Mode as Keys4, Keys7. 
+		So, we have to cast to string first then get the last value
+		*/
+		std::string mode = chartFile["Mode"].as<std::string>();
+		chart->KeyAmount = mode.back() - '0'; //ASCII math
+	}
+
+	if (chartFile["Title"]) 
+	{
+		chart->SongtitleUnicode = chartFile["Title"].as<std::string>();
+		chart->SongTitle = chartFile["Title"].as<std::string>();
+	}
+
+	if (chartFile["Artist"]) 
+	{
+		chart->ArtistUnicode = chartFile["Artist"].as<std::string>();
+		chart->Artist = chartFile["Artist"].as<std::string>();
+	}
+
+	if (chartFile["Source"])
+		chart->Source = chartFile["Source"].as<std::string>();
+
+	if (chartFile["Tags"])
+		chart->Tags = chartFile["Tags"].as<std::string>();
+
+	if (chartFile["Creator"])
+		chart->Charter = chartFile["Creator"].as<std::string>();
+
+	if (chartFile["DifficultyName"])
+		chart->DifficultyName = chartFile["DifficultyName"].as<std::string>();
+	
+	return chart;
+}
+
 void ChartParserModule::ExportChartSet(Chart* InChart)
 {
 	std::ofstream chartFile(_CurrentChartPath);
@@ -489,6 +565,11 @@ void ChartParserModule::ExportChartOsuImpl(Chart* InChart, std::ofstream& InOfSt
 	InOfStream.close();
 }
 void ChartParserModule::ExportChartStepmaniaImpl(Chart* InChart, std::ofstream& InOfStream)
+{
+	return;
+}
+
+void ChartParserModule::ExportChartQuaverImpl(Chart* InChart, std::ofstream& InOfStream)
 {
 	return;
 }

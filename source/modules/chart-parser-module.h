@@ -31,7 +31,9 @@ private:
 
 	Chart* ParseChartOsuImpl(std::ifstream& InIfstream, std::filesystem::path InPath);
 	Chart* ParseChartStepmaniaImpl(std::ifstream& InIfstream, std::filesystem::path InPath);
+	Chart* ParseChartQuaverImpl(std::filesystem::path InPath);
 
 	void ExportChartOsuImpl(Chart* InChart, std::ofstream& InOfStream);
 	void ExportChartStepmaniaImpl(Chart* InChart, std::ofstream& InOfStream);
+	void ExportChartQuaverImpl(Chart* InChart, std::ofstream& InOfStream);
 };
